@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/amazeui.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/amazeui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	#app{
+		
+	}
+	.top{
+		table-layout:fixed;
+	}
+</style>
+</head>
+<body id="app">
+	<van-nav-bar
+	  title="Travelling Guideline"
+	  left-text="返回"
+	  left-arrow
+	  @click-left="onClickLeft"
+	/></van-nav-bar>
+	
+	<div class="top">
+		<!-- 图片 -->
+		<div style="text-align: center;  border: green solid 1px;">
+			<img src="images/o1.png" /> 
+		</div>
+		<!-- 标题 -->
+		<h1 style="text-align:center;padding-top:0rem;">西湖攻略</h1>
+		
+		<div>
+		<!-- 作者名 -->
+            <span style="padding-left:19rem;"><label>作者：海豚桃</label>|9800阅读</span>
+        </div>
+		<!-- 文章内容 -->
+		<p style="font-size:18px">
+			<p>千帆万桅遮云天，
+			万国商贾互市连。
+			盛衰有时岁岁迁，
+			刺桐繁花再更年。
+			—《 泉州 •记》</p>
+			<p>我想很多人都是因为 泉州 申遗 成功 才知道世间还有这座城市吧。其实，我也是。
+			令我惊叹的是，这样一座偏安一隅的小城，竟然在历史上有过如此波澜壮阔的恢宏与繁荣。
+			好奇心，永远都是出发的缘起和动力……</p>
+			<p style="font-size:19px">【城•序】</p>
+			<p>众所周知，马克•波罗是最早将东方推向西方世界的旅人之一，但早在马可•波罗之前，一位 意大利 犹太商人就曾带着好奇与兴奋跳上商船，冒险向东方远航，他的目的地是神秘东方的一座城市，这座城市在当时被人们称为“光明之城”。</p>
+			<p>这座城市正是今天的 泉州 。宋元时期是 泉州 城的黄金时代，海洋贸易的开启与逐步繁荣，将这座城市载入史册。</p>
+			<p>据说，曾与 埃及 亚历山大 港并称世界两大海港的 泉州 港种满刺桐。花开时节，在海上便可遥遥望见整座城市被花海包围与笼罩。</p><p>刺桐花的繁盛映衬着 泉州 城的繁荣，这也让当时远来的商客旅人们给 泉州 起了个浪漫的名字—刺 桐城 。</p>
+			北大人类学系教授王铭铭在《刺 桐城 》一书中提到：“宋元 泉州 给我们的挑战在于，在传统国家的边陲，文化多元曾达到的程度大大出乎习惯于将传统国家与封闭社会对等看待的学者的意料之外。”
+			<p>传统国家，边陲一隅，这些观念上的保守与地理上的束缚似乎很难让 泉州 与文化的开放包容相关联。但是随着贸易兴盛，引来人的汇聚，带来不同的文化与信仰，虽是必然之势，难能可贵的是 泉州 用开放的胸怀和视野将这些多元文化吸收、融汇与聚合。
+			求同存异、美美与共，取其精华、和而不同，才是让 泉州 变得充满活力，虽盛衰有时，但直到今天，依然生生不息、多姿多彩的核心吧。</p>
+		</p>
+	</div>
+	
+	<van-tabbar v-model="active">
+	  <van-tabbar-item icon="good-job-o"></van-tabbar-item>
+	  <van-tabbar-item icon="comment-o"></van-tabbar-item>
+	  <van-tabbar-item icon="star-o"></van-tabbar-item>
+	</van-tabbar>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				
+			},
+			methods:{
+				onClickLeft(){
+					location.href="index.html";
+				}
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html>

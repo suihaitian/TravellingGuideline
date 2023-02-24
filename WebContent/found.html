@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>旅行攻略</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/amazeui.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/amazeui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	#app{
+		
+	}
+</style>
+</head>
+<body id="app">
+	
+	 <div id="header">
+        <span>今日游记与旅行攻略</span>
+        <a href="addnote.html" class="write_note"><i></i></a>
+    </div>
+   
+    <!-- 美丽乡村 -->
+    <div id="beautiful_country">
+        <div id="item_name">
+            <img src="images/index_icon07.png">
+            <span>美丽乡村</span>
+        </div>
+        <ul class="am-avg-sm-2">
+        	<li v-for="note in travel_notes":key="note.nid" class="beautiful_list" @click="toInfo(note.nid)">
+            		<a href="#">
+            			 <div class="pic">
+                            <img :src=`images/${note.nic}` />
+                        </div>
+                        <div class="name">
+                        	<img src="images/y1.png" class="head">
+                        	 <span>185***5764</span>
+                        	<div class="clear"></div>
+                        </div>
+                       <label>{{note.ntitle}}</label>
+                    	<p>{{note.ntheme}}</p>
+            		</a>
+            </li> 
+        </ul>
+    </div>
+
+	<!-- 底部标签栏-->
+		<van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
+			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+			<van-tabbar-item icon="bag-o" url="shop.html">商城</van-tabbar-item>
+			<van-tabbar-item icon="star-o">发现</van-tabbar-item>
+			<van-tabbar-item icon="shopping-cart-o" url="shopcar.html">购物车</van-tabbar-item>
+			<van-tabbar-item icon="user-o" url="user.html">我的</van-tabbar-item>
+		</van-tabbar>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				return{
+					searchValue: '',
+					active: 2,
+					travel_notes: []
+				}
+			},
+			created(){
+				//查询商品数据
+				axios.get("notesServlet",{
+					params:{
+						op: 'findAllNotes'
+					}
+				}).then(resp=>{
+					console.log(resp);
+					this.travel_notes=resp.data;
+				});
+			},
+			methods:{
+				toInfo(nid){
+					location.href="travel_notes.html#"+nid;
+				}
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html>

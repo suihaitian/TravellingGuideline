@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css" />
+<title>阿里严选</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<style>
+	html{
+		font-size: 10px;
+	}
+	body{
+		font-size: 1.4rem;
+	}
+	html,body{
+		height: 100%;
+	}
+	#app{
+		min-height:100%;
+		background-color:#efefef;
+	}
+	.cb{
+		padding: 1rem 4%;
+		background: #fff;
+		border-bottom: 1px solid #ccc;
+	}
+	.cb .van-checkbox__label{
+		flex: 1;
+	}
+	.van-submit-bar{
+		bottom: 5rem;
+	}
+</style>
+</head>
+<body>
+	<div id="app">
+		<van-checkbox-group v-model="checkNames">
+			<van-checkbox :name="good.gid" class="cb" v-for="good in goods" :key="good.gid">
+				<van-card
+				  :num="good.num"
+				  :price="good.price"
+				  :desc="good.brief"
+				  :title="good.gname"
+				  :thumb=`images/${good.pic}`
+				  :origin-price=`/${good.price*1.5}`
+				></van-card>
+			</van-checkbox>
+		</van-checkbox-group>
+		
+		<van-submit-bar :price="money*100" button-text="提交订单" >
+			<van-checkbox v-model="checked">全选</van-checkbox>
+		  <template #tip>
+		    	总共 <span>{{count}}</span> 件商品
+		  </template>
+		</van-submit-bar>
+		
+		<!--底部导航栏-->
+		<van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
+			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+			<van-tabbar-item icon="bag-o" url="shop.html">商城</van-tabbar-item>
+			<van-tabbar-item icon="star-o" url="found.html">发现</van-tabbar-item>
+			<van-tabbar-item icon="shopping-cart-o" >购物车</van-tabbar-item>
+			<van-tabbar-item icon="user-o" url="user.html">我的</van-tabbar-item>
+		</van-tabbar>	
+	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+ 		//基本元素
+ 		let app={
+ 			data(){
+	 			return {
+		 			active: 3,
+		 			checkNames: [],
+		 			goods: [],
+		 			checked: true,
+		 			count: 0,
+		 			money: 0
+	 			}
+	 		},
+	 		created(){
+	 			let nickname = localStorage.getItem("nickname");
+	 			if(nickname == null){
+	 				alert("请先登录");
+ 					return;
+	 			}
+	 			
+	 			
+	 			axios.get("goodsServlet",{
+	 				params: {
+	 					op: "findCart"
+	 				}
+	 			}).then(resp=>{
+	 				console.log(resp);
+	 				this.goods = resp.data;
+	 				
+	 				if( this.goods != null ){
+	 					this.goods.map(item=>{
+		 					this.checkNames.push(item.gid);
+		 					this.count += parseInt(item.num);
+		 					this.money += item.num * item.price;
+		 				});
+	 				}	 					 				
+	 			});
+	 		},
+	 		methods:{
+	 			order(){
+	 				axios("goodsServlet",{
+	 					params: {
+	 						op: "order",
+	 						money: this.money
+	 					}
+	 				}).then(resp=>{
+	 					document.write(resp.data);
+	 				});
+	 			}
+	 		}
+ 		}
+ 		//创建vue的实例
+ 		let vue = Vue.createApp(app);
+ 		//绑定vantui
+ 		vue.use(vant);
+ 		//创建到节点上面
+ 		vue.mount("#app");
+	</script>
+</body>
+<html>

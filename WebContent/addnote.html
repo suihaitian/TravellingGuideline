@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/amazeui.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/amazeui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	#app{
+		
+	}
+	.as{
+		text-align:center;
+	}
+	.top{
+		text-align:center;
+		
+	}
+	.top .van-uploader{
+		
+	}
+</style>
+</head>
+<body id="app">
+	<van-nav-bar
+	  title="Travelling Guideline"
+	  left-text="返回"
+	  left-arrow
+	  @click-left="onClickLeft"
+	/></van-nav-bar>
+	
+	<div class="as">
+		<h2>
+			发布游记
+		</h2>
+		<hr>
+	</div>
+	<div class="top">
+		<van-uploader v-model="fileList" multiple/>
+	</div>
+	<div class="mid">
+		  <!-- 可以使用 CellGroup 作为容器 -->
+			<van-cell-group inset>
+			  <van-field v-model="value" label="标题" placeholder="请输入游记标题" />
+			</van-cell-group>
+			
+			<van-cell-group inset>
+			<van-field v-model="value" label="作者名" placeholder="请输入作者名" />
+			</van-cell-group>
+			
+			<van-cell-group inset>
+			  <van-field
+			    v-model="message"
+			    rows="2"
+			    autosize
+			    label="留言"
+			    type="textarea"
+			    maxlength="50"
+			    placeholder="请输入游记内容"
+			    show-word-limit
+			  />
+			</van-cell-group>
+			
+			<div style="text-align:center;padding-top:10rem;">
+				<van-button type="primary" @click="add">发布游记</van-button>
+			</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				
+			},
+			methods:{
+				onClickLeft(){
+					location.href="found.html";
+				},
+				add(){
+					alert("发布成功");
+				}
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html>

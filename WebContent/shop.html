@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>旅行攻略</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/amazeui.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/amazeui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	#app{
+		min-height:100%;
+		background-color:#efefef;
+	}
+	.top van-search{
+		width:80%;
+	}
+	.top van-icon{
+		padding-left:1rem;
+	}
+	.goodsList{
+		margin-top:2rem;
+		width:100%;
+		height:110rem;
+		background:#fff;
+	}
+	.goodsList p{
+		height:2rem;
+		text-align:center;
+		line-height:2rem;
+		font-size:1.2rem;
+		font-weight:bold;
+	}
+	.goodsList ul{
+		padding:1rem;
+		display:flex;
+		justify-content:space-between;
+		flex-wrap:wrap;
+		background:#fff;
+	}
+	.goodsList ul li{
+		width:48%;
+		margin-bottom:1rem;
+		background:#fff;
+		text-align:center;
+		border:1px solid #efefef;
+		line-height:2.4rem;
+	}
+	.goodsList ul li img{
+		width:100%;
+		height: 80%;
+	}
+	.goodsList ul li .price{
+		color:red;
+	}
+	.specialty_mall ul li img{
+		width:100%;
+		height: 80%;
+	}
+</style>
+</head>
+<body >
+	<div id="app">	
+		<div class="top">
+			<!-- 搜索框 -->
+			<van-search
+		  	v-model="value"
+		  	shape="round"
+		  	background="#4fc08d"
+		  	placeholder="想买什么景区特产？"
+			/>
+			<!-- 购物车图标 -->
+			<van-icon name="shopping-cart-o" />
+		</div>
+	
+		<!-- 优质特产 -->
+      	<div id="specialty_mall">
+            	<div id="item_name">
+                	<img src="images/index_icon06.png"/>
+                	<span>优质特产</span>
+            	</div>
+            	<ul>            	
+                	<li v-for="good in goods1":key="good.gid" @click="toInfo(good.gid)">
+                    	<a href="#" class="project">
+                        	<div class="pic"><img :src=`images/${good.pic}` alt="" style="display:block"/></div>
+                        	<div class="project_cont"><p>{{good.gname}}</p></div>
+                        	<div class="price"><label>￥{{good.price}}元</label></div>
+                        	<div class="clear"></div>                        
+                    	</a>
+                	</li>               
+            	</ul>
+      	</div>
+      
+      	<!-- 严选特产-->
+			<div class="goodsList">
+				<div id="item_name">
+	                <img src="images/index_icon06.png"/>
+	                <span>严选特产</span>
+	            </div>
+				<div>
+					<ul>
+						<li v-for="good in goods2":key="good.gid" @click="toInfo(good.gid)">
+							<img :src=`images/${good.pic}` alt="" style="display:block">
+							<div class="van-ellipsis">{{good.gname}}</div>
+							<div class="price">￥{{good.price}}元</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		
+	
+		<!-- 底部标签栏-->
+			<van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
+				<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+				<van-tabbar-item icon="bag-o">商城</van-tabbar-item>
+				<van-tabbar-item icon="star-o" url="found.html">发现</van-tabbar-item>
+				<van-tabbar-item icon="shopping-cart-o" url="shopcar.html">购物车</van-tabbar-item>
+				<van-tabbar-item icon="user-o" url="user.html">我的</van-tabbar-item>
+			</van-tabbar>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				return{
+					active: 1,
+					searchValue: '',
+					goods1: [],
+					goods2: []
+				}
+			},
+			created(){
+				//查询优质商品数据
+				axios.get("goodsServlet",{
+					params:{
+						op: 'findGoodGoods'
+					}
+				}).then(resp=>{					
+					this.goods1=resp.data;
+				});
+				//查询严选商品数据
+				axios.get("goodsServlet",{
+					params:{
+						op: 'findYanxuanGoods'
+					}
+				}).then(resp=>{					
+					this.goods2=resp.data;
+				});
+			},
+			methods:{
+				toInfo(gid){
+					location.href="goodsinfo.html#"+gid;
+				}
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html>
+
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>旅行攻略</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/amazeui.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/amazeui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	#app{
+		
+	}
+	.top van-search{
+		width:80%;
+	}
+	.top van-icon{
+		padding-left:1rem;
+	}
+	.goodsList{
+		margin-top:2rem;
+		width:100%;
+		height:110rem;
+		background:#fff;
+	}
+	.goodsList p{
+		height:2rem;
+		text-align:center;
+		line-height:2rem;
+		font-size:1.2rem;
+		font-weight:bold;
+	}
+	.goodsList ul{
+		padding:1rem;
+		display:flex;
+		justify-content:space-between;
+		flex-wrap:wrap;
+		background:#fff;
+	}
+	.goodsList ul li{
+		width:48%;
+		margin-bottom:1rem;
+		background:#fff;
+		text-align:center;
+		border:1px solid #efefef;
+		line-height:2.4rem;
+	}
+	.goodsList ul li img{
+		width:100%;
+		height: 80%;
+	}
+	.goodsList ul li .price{
+		color:red;
+	}
+</style>
+</head>
+<body id="app">
+	
+	<div class="top">
+		搜索框
+		<van-search
+		  v-model="searchValue"
+		  shape="round"
+		  background="#4fc08d"
+		  placeholder="想买什么景区特产？"
+		/>
+		购物车图标
+		<van-icon name="shopping-cart-o" />
+	</div>
+	
+	优质特产
+      <div id="specialty_mall">
+            <div id="item_name">
+                <img src="images/index_icon06.png"/>
+                <span>优质特产</span>
+            </div>
+            <ul>
+            	<li v-for="good in goods":key="good.gid" @click="toInfo(good.gid)">
+            		<a href="#" class="project">
+            			 <div class="pic">
+                            <img :src=`images/${good.pic}`/>
+                        </div>
+                        <div class="project_cont">
+                            <p>{{good.gname}}</p>
+                        </div>
+                        <div class="price">
+                            <label>¥{{good.price}}</label>
+                            <div class="clear"></div>
+                        </div>
+            		</a>
+            	</li>
+                <li>
+                    <a href="#" class="project">
+                        <div class="pic">
+                            <img src="images/goods1_1.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>海玉石头饼干2kg整箱1kg山西特产蜂巢千层饼干石子馍休闲零食小吃</p>
+                        </div>
+                        <div class="price">
+                            <label>¥28.80</label>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="project">
+                        <div class="pic">
+                            <img src="images/goods2_1.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>正宗荣欣堂太谷饼原味小包装30袋大山西特产手工点心吃太古饼整箱</p>
+                        </div>
+                        <div class="price">
+                            <label>¥26.80</label>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="project">
+                        <div class="pic">
+                            <img src="images/goods3_1.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>广进祥高梁肉408g温州特产酱卤味猪肉片肉干猪肉脯年货纸蓬包手礼</p>
+                        </div>
+                        <div class="price">
+                            <label>¥99.00</label>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="project">
+                        <div class="pic">
+                            <img src="images/goods4_1.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>正宗秋林里道斯儿童肠哈尔滨红肠瘦肉肠原厂独立包装秋林特产</p>
+                        </div>
+                        <div class="price">
+                            <label>¥85.00</label>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+      </div>
+      
+      严选特产
+		<div class="goodsList">
+			 <div id="item_name">
+                <img src="images/index_icon06.png"/>
+                <span>严选特产</span>
+            </div>
+			<div>
+				<ul>
+					<li v-for="good in goods":key="good.gid" @click="toInfo(good.gid)">
+						<img :src=`images/${good.pic}` alt="" style="display:block">
+						<div class="van-ellipsis">{{good.gname}}</div>
+						<div class="price">￥{{good.price}}元</div>
+					</li>
+					<li>
+						<img src="images/goods5_1.jpg" alt="" style="display:block">
+						<div class="van-ellipsis">老山合猪头粽</div>
+						<div class="price">￥10.50元</div>
+					</li>
+					<li>
+						<img src="images/goods6_1.jpg" alt="" style="display:block">
+						<div class="van-ellipsis">攀枝花芒果干</div>
+						<div class="price">￥28.90元</div>
+					</li>
+					<li>
+						<img src="images/goods7_1.jpg" alt="" style="display:block">
+						<div class="van-ellipsis">瓜慕香看枣仁派</div>
+						<div class="price">￥142.00元</div>
+					</li>
+					<li>
+						<img src="images/goods8_1.jpg" alt="" style="display:block">
+						<div class="van-ellipsis">奶嚼口</div>
+						<div class="price">￥17.90元</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+	
+	底部标签栏
+		<van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
+			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+			<van-tabbar-item icon="bag-o">商城</van-tabbar-item>
+			<van-tabbar-item icon="star-o" url="found.html">发现</van-tabbar-item>
+			<van-tabbar-item icon="shopping-cart-o" url="shopcar.html">购物车</van-tabbar-item>
+			<van-tabbar-item icon="user-o" url="user.html">我的</van-tabbar-item>
+		</van-tabbar>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				return{
+					active: 1,
+					searchValue: ''
+					//goods: []
+				}
+			}/* ,
+			created(){
+				//查询商品数据
+				axios.get("goodsServlet",{
+					params:{
+						op: 'findAllGoods'
+					}
+				}).then(resp=>{
+					console.log(resp);
+					this.goods=resp.data;
+				});
+			},
+			methods:{
+				toInfo(gid){
+					location.href="goodsinfo.html#"+gid;
+				}
+			} */
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html> -->

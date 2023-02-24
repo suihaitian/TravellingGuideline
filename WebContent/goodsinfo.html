@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>旅行攻略</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	*{
+		padding:0;
+		margin:0;
+	}
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	.van-swipe img{
+		width:100%;
+		display:block;
+	}
+	.info{
+		background:#fff;
+		text-align:center;
+		line-height:3.5rem;
+		padding:1.2rem 0;
+		border-bottom:1px solid #666;
+	}
+	.info div{
+		color:red;
+	}
+	.attr{
+		background:#fff;
+		padding:2rem 4%;
+	}
+	.attr h4{
+		font-size:1.6rem;
+		margin-bottom:2rem;
+	}
+	.attr ul li{
+		background:#eee;
+		height:4rem;
+		line-height:4rem;
+		border-radius:4px;
+		margin-bottom:1rem;
+		display:flex;
+		justify-content:space-between;
+	}
+	.attr ul li span{
+		width:25%;
+		text-align:right;
+	}
+	.attr ul li section{
+		flex:1;
+		padding-left:2rem;
+	}
+	.box img{
+		width:100%;
+		display:block;
+	}
+</style>
+</head>
+<body>
+	<div id="app">
+		<!-- 轮播图 -->
+		<van-swipe :autoplay="3000" lazy-render>
+		  <van-swipe-item v-for="im,index in gallery" :key="index">		    
+		    <img :src=`images/${im}` />
+		  </van-swipe-item>
+		</van-swipe>
+		
+		<!-- 商品信息 -->
+		<div class="info">
+			<h3>{{good.gname}}</h3>
+			<p>{{good.brief}}</p>
+			<div>￥{{good.price}}元</div>
+		</div>
+		
+		<!-- 商品属性 -->
+		<div class="attr">
+			<h4>商品属性</h4>
+			<ul>
+				<li v-for="item,index in attr":key="index">
+					<span>{{item.aname}}</span>
+					<section>{{item.val}}</section>
+				</li>
+			</ul>
+		</div>
+		
+		<!-- 商品描述 -->
+		<div class="box" v-html="good.descr"></div>
+		
+		<!-- 底部标签栏-->		
+		<van-action-bar>
+		  <van-action-bar-icon icon="revoke" text="返回" @click="toHome"></van-action-bar-icon>
+		  <van-action-bar-icon icon="cart-o" text="购物车" :badge="badge" @click="toCart"></van-action-bar-icon>
+		  <van-action-bar-icon icon="star" text="收藏"></van-action-bar-icon>
+		  <van-action-bar-button type="warning" text="加入购物车" @click="addCart()"></van-action-bar-button>
+		  <van-action-bar-button type="danger" text="立即购买"></van-action-bar-button>
+		</van-action-bar>
+	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				return{
+					gid: 0,
+					gallery:[],
+					good:{},
+					attr:[],
+					badge:0
+				}
+			},
+			created(){
+				console.log(location.hash);
+				this.gid=location.hash.replace("#","");
+				//查询这个gid相关的所有的商品信息
+				axios.get("goodsServlet",{
+					params:{
+						op: 'findByGid',
+						gid:this.gid
+					}
+				}).then(resp=>{
+					if(resp.data==-1){
+						location.href="index.html";
+					}else{
+						console.log(resp.data);
+						this.gallery=resp.data[0].gallery.split(",");
+						this.good=resp.data[0];
+						this.attr=resp.data;
+					}
+				});
+			},
+			methods:{
+				toHome(){
+	 				location.href = "shop.html";
+	 			},
+	 			toCart(){
+	 				location.href = "shopcar.html";
+	 			},				
+				addCart(){
+					//先验证用户是否登陆
+					let nickname=localStorage.getItem("nickname");
+					if(nickname==null){
+						alert("请先登录");
+						return;
+					}
+					//开始发送请求
+					axios.get("goodsServlet",{
+						params:{
+							op: 'addCart',
+							gid: this.gid
+						}
+					}).then(resp=>{
+						if(resp.data>0){
+							alert("添加成功");
+							if(resp.data==2){
+								this.badge++;
+							}
+						}
+					});
+				}
+				
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html>
+
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>旅行攻略</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	*{
+		padding:0;
+		margin:0;
+	}
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	.van-swipe img{
+		width:100%;
+		display:block;
+	}
+	.info{
+		background:#fff;
+		text-align:center;
+		line-height:3.5rem;
+		padding:1.2rem 0;
+		border-bottom:1px solid #666;
+	}
+	.info div{
+		color:red;
+	}
+	.attr{
+		background:#fff;
+		padding:2rem 4%;
+	}
+	.attr h4{
+		font-size:1.6rem;
+		margin-bottom:2rem;
+	}
+	.attr ul li{
+		background:#eee;
+		height:4rem;
+		line-height:4rem;
+		border-radius:4px;
+		margin-bottom:1rem;
+		display:flex;
+		justify-content:space-between;
+	}
+	.attr ul li span{
+		width:25%;
+		text-align:right;
+	}
+	.attr ul li section{
+		flex:1;
+		padding-left:2rem;
+	}
+	.box img{
+		width:100%;
+		display:block;
+	}
+</style>
+</head>
+<body>
+	<div id="app">
+		轮播图
+		<van-swipe :autoplay="3000" lazy-render>
+		  <van-swipe-item v-for="im,index in gallery" :key="index">
+		    
+		    <img :src=`images/${im}` />
+		  </van-swipe-item>
+		</van-swipe>
+		
+		商品信息
+		<div class="info">
+			<h3>{{good.gname}}</h3>
+			<p>{{good.brief}}</p>
+			<div>￥{{good.price}}元</div>
+		</div>
+		
+		商品属性
+		<div class="attr">
+			<h4>商品属性</h4>
+			<ul>
+				<li v-for="item,index in attr":key="index">
+					<span>{{item.aname}}</span>
+					<section>{{item.val}}</section>
+				</li>
+			</ul>
+		</div>
+		
+		商品描述
+		<div class="box" v-html="good.descr"></div>
+		
+		底部标签栏
+		<van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
+			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+			<van-tabbar-item icon="bag-o" url="shop.html">商城</van-tabbar-item>
+			<van-tabbar-item icon="star-o" url="found.html">发现</van-tabbar-item>
+			<van-tabbar-item icon="shopping-cart-o" url="shopcar.html">购物车</van-tabbar-item>
+			<van-tabbar-item icon="user-o" url="user.html">我的</van-tabbar-item>
+		</van-tabbar>
+	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				return{
+					gid: 0,
+					gallery:[],
+					good:{},
+					attr:[]
+				}
+			},
+			created(){
+				console.log(location.hash);
+				this.gid=location.hash.replace("#","");
+				//查询这个gid相关的所有的商品信息
+				axios.get("goodsServlet",{
+					params:{
+						op: 'findByGid',
+						gid:this.gid
+					}
+				}).then(resp=>{
+					if(resp.data==-1){
+						location.href="index.html";
+					}else{
+						console.log(resp.data);
+						this.gallery=resp.data[0].gallery.split(",");
+						this.good=resp.data[0];
+						this.attr=resp.data;
+					}
+				});
+			},
+			methods:{
+				addCart(){
+					//先验证用户是否登陆
+					let nickname=localStorage.getItem("nickname");
+					if(nickname==null){
+						alert("请先登录");
+						return;
+					}
+					//开始发送请求
+					axios.get("goodsServlet",{
+						params:{
+							op: 'addCart',
+							gid: this.gid
+						}
+					}).then(resp=>{
+						if(resp.data>0){
+							alert("添加成功");
+							if(resp.data==2){
+								this.badge++;
+							}
+						}
+					});
+				}
+				
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html> -->

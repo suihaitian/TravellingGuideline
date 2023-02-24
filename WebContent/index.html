@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>旅行攻略</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/amazeui.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/amazeui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+html {
+	font-size: 10px; /*1rem=10px*/
+}
+
+body {
+	font-size: 1.4rem;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+#app {
+	
+}
+
+.van-swipe img {
+	display: block;
+	width: 100%;
+}
+</style>
+</head>
+<body>
+	<div id="app">
+		<!-- logo图片 -->
+		<van-image width="100%" height="100" src="images/logo01.png" />
+
+		<!-- 搜索框 -->
+		<van-search v-model="searchValue" shape="round" background="#fff"
+			placeholder="搜索旅游目的地/攻略/游记" /></van-search>
+
+		<!-- 轮播图 -->
+		<van-swipe :autoplay="3000" lazy-render> <van-swipe-item>
+		<img src="images/a1.png" alt="" /> </van-swipe-item> <van-swipe-item>
+		<img src="images/a2.png" alt="" /> </van-swipe-item> <van-swipe-item>
+		<img src="images/a3.png" alt="" /> </van-swipe-item> <van-swipe-item>
+		<img src="images/a4.png" alt="" /> </van-swipe-item> </van-swipe>
+
+		<!-- 宫格-->
+		<van-grid :column-num="4"> <van-grid-item
+			icon="images/c1.png" text="找攻略" /></van-grid-item> <van-grid-item
+			icon="images/c2.png" text="看推荐" /></van-grid-item> <van-grid-item
+			icon="images/c3.png" text="问答人" /></van-grid-item> <van-grid-item
+			icon="images/c1.png" text="去结伴" /></van-grid-item> <van-grid-item
+			icon="images/c2.png" text="必游榜" /></van-grid-item> <van-grid-item
+			icon="images/c3.png" text="自驾" /></van-grid-item> <van-grid-item
+			icon="images/c1.png" text="露营" /></van-grid-item> <van-grid-item
+			icon="images/c2.png" text="徒步" /></van-grid-item> </van-grid>
+
+		<!-- 热门游记  -->
+		<div id="beautiful_country">
+			<div id="item_name">
+				<img src="images/index_icon07.png"> <span>热门游记</span>
+			</div>
+			<ul class="am-avg-sm-2">
+				<li v-for="note in travel_notes":key="note.nid" class="beautiful_list" @click="toInfo(note.nid)">
+            		<a href="#">
+            			 <div class="pic">
+                            <img :src=`images/${note.nic}` />
+                        </div>
+                        <div class="name">
+                        	<img src="images/y1.png" class="head">
+                        	 <span>185***5764</span>
+                        	<div class="clear"></div>
+                        </div>
+                       <label>{{note.ntitle}}</label>
+                    	<p>{{note.ntheme}}</p>
+            		</a>
+            	</li> 
+				<!--  <li class="beautiful_list">
+                <a href="#">
+                    <div class="pic">
+                        <img src="images/z6.png" />
+                    </div>
+                    <div class="name">
+                        <img src="images/y5.png" class="head">
+                        <span>132***5841</span>
+                        <div class="clear"></div>
+                    </div>
+                    <label>亚平宁的美丽传说</label>
+                    <p>科尔蒂纳所在地——多洛米蒂山区的美丽景色跃入眼帘，我突然怔住...</p>
+                </a>
+            </li>
+				 <li class="beautiful_list">
+                <a href="#">
+                    <div class="pic">
+                        <img src="images/z2.png" />
+                    </div>
+                    <div class="name">
+                        <img src="images/y3.png" class="head">
+                        <span>158***5847</span>
+                        <div class="clear"></div>
+                    </div>
+                    <label>一个人的阿尔山之东</label>
+                    <p>2022年的第一场旅行，从白城开往阿尔山的绿皮火车开始...</p>
+                </a>
+            </li> -->
+			</ul>
+			
+		</div>
+
+		<!-- 推荐攻略 -->
+		<div id="specialty_mall">
+            <div id="item_name">
+                <img src="images/index_icon08.png"/>
+                <span>推荐攻略</span>
+            </div>
+            <ul>
+            	<li v-for="tr in travel":key="tr.aid" @click="toInfo(tr.aid)">
+                    <a href="#" class="project">
+                        <div class="pic">
+                            <img :src=`images/${tr.aic}` />
+                        </div>
+                        <div class="project_cont">
+                            <p>{{tr.atheme}}</p>
+                        </div>
+                        <div class="price">
+                            <label>{{tr.anum}}<font color="gray" size="2rem">浏览</font></label>
+                            <span>{{tr.adr}}</span>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="travel.html" class="project">
+                        <div class="pic">
+                            <img src="images/project_001.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>衡山又名南岳，是我国五岳之一，以壮美的自然风光...</p>
+                        </div>
+                        <div class="price">
+                            <label>300<font color="gray" size="2rem">浏览</font></label>
+                            <span>湖南-衡阳</span>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="travel1.html" class="project">
+                        <div class="pic">
+                            <img src="images/project_002.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>柳浪闻莺是西湖十景之一，是人们放松身心的好地方...</p>
+                        </div>
+                        <div class="price">
+                            <label>500<font color="gray" size="2rem">浏览</font></label>
+                            <span>浙江-杭州</span>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="travel2.html" class="project">
+                        <div class="pic">
+                            <img src="images/project_003.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>毗邻黄浦江，与外滩隔江相望，是上海的标志性文化景观之一...</p>
+                        </div>
+                        <div class="price">
+                            <label>800<font color="gray" size="2rem">浏览</font></label>
+                            <span>上海-外滩</span>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="travel3.html" class="project">
+                        <div class="pic">
+                            <img src="images/project_004.jpg"/>
+                        </div>
+                        <div class="project_cont">
+                            <p>黄果树瀑布是中国和亚洲第一大瀑布，风景优美...</p>
+                        </div>
+                        <div class="price">
+                            <label>600<font color="gray" size="2rem">浏览</font></label>
+                            <span>贵州-安顺</span>
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            
+      </div>
+
+		<!-- 景区活动 -->
+		<div id="trip_list" style="width: 100%; overflow: hidden;">
+			<div class="am-tabs" data-am-tabs>
+				<div class="item_name">
+					<img src="images/index_icon05.png" /> <span>景区活动</span>
+				</div>
+				<ul class="am-tabs-nav am-nav am-nav-tabs am-avg-sm-2">
+					<li class="am-active"><a href="#"> 旅游活动 </a></li>
+					<li><a href="#"> 旅游景区 </a></li>
+				</ul>
+				<div class="am-tabs-bd">
+					<div class="am-tab-panel am-active">
+						<ul>
+							<li class="view">
+								<div class="pic">
+									<img src="images/trip_list_002.jpg">
+									<div class="cont">
+										<a href="#" class="button"> 查看详情 </a>
+										<div class="num">
+											<p>
+												<span>20/30</span>人报名
+											</p>
+											<p>
+												出发时间<span>2022/5/20</span>
+											</p>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</div>
+								<div class="con">
+									<span>冰雪文化节</span>
+									<p>沙漠花海滑雪场开放啦，自由享受滑雪的乐趣...</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="am-tab-panel" id="tab2">
+						<ul>
+							<li class="view">
+								<div class="pic">
+									<img src="images/trip_list_01.jpg">
+									<div class="cont">
+										<a href="#" class="button"> 查看购票 </a>
+										<div class="num">
+											<p>
+												<span>20/30</span>人报名
+											</p>
+											<p>
+												出发时间<span>2022/5/20</span>
+											</p>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</div>
+								<div class="con">
+									<span>九曲黄河第一湾</span>
+									<p>行摄黄河晋秦10日定制游（入住晋陕特色窑洞/客栈+体验黄河民俗风情+开启两地地质奇观摄影之旅）...</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div id="more">
+				<a href="#"> <span>更多资讯</span> <i class="am-icon-angle-right"></i>
+				</a>
+			</div>
+		</div>
+
+		<!-- 底部标签栏-->
+		<van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000" @change="onChange">
+			<van-tabbar-item icon="home-o">首页</van-tabbar-item>
+			<van-tabbar-item icon="bag-o" url="shop.html">商城</van-tabbar-item>
+			<van-tabbar-item icon="star-o" url="found.html">发现</van-tabbar-item>
+			<van-tabbar-item icon="shopping-cart-o" url="shopcar.html">购物车</van-tabbar-item>
+			<van-tabbar-item icon="user-o" url="user.html">我的</van-tabbar-item>
+		</van-tabbar>
+
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				return{
+					searchValue: '',
+				    active: 0,
+				    travel_notes: []
+				}
+			},
+			created(){
+				//查询商品数据
+				axios.get("notesServlet",{
+					params:{
+						op: 'findtwoNotes'
+					}
+				}).then(resp=>{
+					console.log(resp);
+					this.travel_notes=resp.data;
+				});
+			},
+			methods:{
+				toInfo(nid){
+					location.href="travel_notes.html#"+nid;
+				}
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

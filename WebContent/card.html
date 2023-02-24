@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>旅行攻略</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css"/>
+    <!-- 引入 Vue 和 Vant 的 JS 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <style>
+        html{
+            font-size:10px;    /*1rem=10px*/
+        }
+        body{
+            font-size:1.4rem;
+        }
+        html,body{
+            width:100%;
+            height:100%;
+        }
+        </style>
+</head>
+<body>
+    <div id="app">
+        <van-nav-bar title="全部订单" left-text="返回" left-arrow @click-left="aa">
+            <template #right>
+              <van-icon name="search" size="18" />
+            </template>
+          </van-nav-bar>          
+    <div id="card">
+        <van-card
+        num="2"
+        price="48.00"
+        desc="孟津袖珍西瓜皮薄质优、携带方便、色泽艳丽、皮薄质优门峡...
+        "
+        title="孟津袖珍西瓜"
+        thumb="images/project_01.jpg"
+      > 
+        <template #footer>
+          <van-button size="mini">删除订单</van-button>
+          <van-button size="mini">再次购买</van-button>
+        </template>
+      </van-card>  
+      <van-card
+        num="2"
+        price="50.00"
+        desc="好吃的黑豆"
+        title="黑豆"
+        thumb="images/project_02.jpg"
+      >
+        <template #footer>
+          <van-button size="mini">删除订单</van-button>
+          <van-button size="mini">再次购买</van-button>
+        </template>
+      </van-card>  
+      <van-card
+        num="2"
+        price="28.00"
+        desc="黄黄的小米"
+        title="优质小米"
+        thumb="images/project_03.jpg"
+      >
+        <template #footer>
+          <van-button size="mini">删除订单</van-button>
+          <van-button size="mini">再次购买</van-button>
+        </template>
+      </van-card>  
+      <van-card
+        num="2"
+        price="2.00"
+        desc="酸甜可口"
+        title="黑美人葡萄"
+        thumb="images/project_04.jpg"
+      >
+        <template #footer>
+          <van-button size="mini">删除订单</van-button>
+          <van-button size="mini">再次购买</van-button>
+        </template>
+      </van-card>  
+     
+    </div>
+</div>
+</body>
+<script>
+    //vue需要绑定一个节点
+    let app={
+        data(){
+            return{
+                
+            }
+        },
+        methods: {
+            aa(){
+                location.href = "user.html";
+            }
+        }
+    }
+    //创建Vue的实例
+    let vue=Vue.createApp(app);
+    //将vantui绑定到vue的实例上面
+    vue.use(vant);
+    //最后，挂载到dom节点上面
+    vue.mount("#app");
+</script>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>旅行攻略</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+	#app{
+		min-height:100%;
+		background-color:#efefef;
+	}
+	.van-row{
+		padding:2rem 4%;
+		background:#333;
+		color:#fff;
+	}
+	.van-row .van-col{
+		line-height:8rem;
+		font-size:1.8rem;
+	}
+	.van-row img{
+		width:8rem;
+		border-radius:50%;
+		display:block;
+	}
+	.van-grid-item{
+		height:10rem;
+	}
+	.login_model{
+		width:100%;
+		height:100%;
+		position:absolute;
+		top:0;
+		left:0;
+		z-index:10;
+	}
+	.login_model section{
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,0.5);
+	}
+	.login_model .login_form{
+		width:90%;
+		position:absolute;
+		top:50%;
+		left:50%;
+		transform:translate(-50%,-50%);
+		padding:1rem;
+		box-sizing:border-box;
+		background:#fff;
+	}
+</style>
+</head>
+<body>
+	<div id="app">
+		<van-row>
+		  <van-col span="6">
+		  	<img :src="pic" alt="" />
+		  </van-col>
+		  <van-col span="17" @click="changeModel">{{nickname}}</van-col>
+		  <van-col span="1"><van-icon name="arrow" /></van-col>
+		</van-row>
+		<!-- 宫格-->
+		<van-grid :column-num="4">
+			<van-grid-item icon="images/收藏1小.png" text="收藏" /></van-grid-item>
+			<van-grid-item icon="images/订阅.png" text="订阅店铺" /></van-grid-item>
+			<van-grid-item icon="images/足迹.png" text="足迹" /></van-grid-item>
+			<van-grid-item icon="images/礼券.png" text="红包礼券" @click="bb()"></van-grid-item>
+		  </van-grid>
+		  <br>
+		  <span style="padding-left:1.2rem;">我的订单</span>
+		<van-grid :column-num="4">
+		  <van-grid-item icon="images/全部订单.png" text="全部订单" @click="aa()"></van-grid-item>
+		  <van-grid-item icon="images/订单 待付款.png" text="待付款" ></van-grid-item>
+		  <van-grid-item icon="images/订单-待出行.png" text="未出行" ></van-grid-item>
+		  <van-grid-item icon="images/待评论.png" text="待点评" ></van-grid-item>
+		</van-grid>
+		<br>
+		<van-grid :column-num="4">
+			<van-grid-item icon="images/收货地址.png" text="收获地址" /></van-grid-item>
+			<van-grid-item icon="images/官方客服.png" text="官方客服" /></van-grid-item>
+			<van-grid-item icon="images/物流快递.png" text="我的快递" /></van-grid-item>
+			<van-grid-item icon="images/评价.png" text="我的评价" /></van-grid-item>
+		  </van-grid>
+		  <br>
+		  <br>
+		  <div id="recommend">
+		</div>
+		
+		<div class="login_model" v-if="showFlag">
+			<section @Click="changeModel"></section>
+			<van-form class="login_form">
+				<van-cell-group inset>
+					<van-field
+				      v-model="username"
+				      name="用户名"
+				      label="用户名"
+				      placeholder="用户名"
+				      :rules="[{ required: true, message: '请填写用户名' }]"
+				    /></van-field>
+				    <van-field
+				      v-model="password"
+				      type="password"
+				      name="密码"
+				      label="密码"
+				      placeholder="密码"
+				      :rules="[{ required: true, message: '请填写密码' }]"
+				    /></van-field>
+				    </van-cell-group>
+				    <div style="margin:16px;">
+				    	<van-button round block type="primary" native-type="sumbit" @click="login">
+				    	登录
+				    	</van-button>
+				    </div>
+			</van-form>
+		</div>
+		
+		<!-- 底部标签栏-->
+		<van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
+			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+			<van-tabbar-item icon="bag-o" url="shop.html">商城</van-tabbar-item>
+			<van-tabbar-item icon="star-o" url="found.html">发现</van-tabbar-item>
+			<van-tabbar-item icon="shopping-cart-o" url="shopcar.html">购物车</van-tabbar-item>
+			<van-tabbar-item icon="user-o" >我的</van-tabbar-item>
+		</van-tabbar>
+	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script>
+		//vue需要绑定一个节点
+		let app={
+			data(){
+				return{
+					nickname: '点击登录',
+					pic: 'images/y4.png',
+					active: 4,
+					showFlag:false,
+					username: '',
+					password: ''
+					
+				}
+			},
+			created(){
+				//取值
+				let nickname=localStorage.getItem("nickname");
+				let pic=localStorage.getItem("pic");
+				//从本地存储中取值
+				this.nickname=nickname==null?"点击登录":nickname;
+				this.pic=pic==null?"images/y4.png":pic;
+			},
+			methods:{
+				aa(){
+					location.href = "card.html";
+				},
+				bb(){
+					location.href = "coupon.html";
+				},
+				changeModel(){
+					this.showFlag=!this.showFlag;
+				},
+				login(){
+					axios.get("userServlet",{
+						params:{
+							op: 'login',
+							username: this.username,
+							password: this.password
+						}
+					}).then(resp=>{
+						if(resp.data==-1){
+							alert("注册失败");
+						}else if(resp.data==-2){
+							alert("用户名或者密码错误");
+						}else{
+							this.showFlag=!this.showFlag;
+							this.nickname=resp.data;
+							this.pic='images/y4.png';
+							
+							//当用户登录成功之后，将数据存储到本地存储
+							localStorage.setItem("nickname",this.nickname);
+							localStorage.setItem("pic",this.pic);
+						}
+					});
+				}
+			}
+		}
+		//创建Vue的实例
+		let vue=Vue.createApp(app);
+		//将vantui绑定到vue的实例上面
+		vue.use(vant);
+		//最后，挂载到dom节点上面
+		vue.mount("#app");
+	</script>
+</body>
+</html> 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>旅行攻略</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@3/lib/index.css"/>
+    <!-- 引入 Vue 和 Vant 的 JS 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <style>
+	html{
+		font-size:10px;    /*1rem=10px*/
+	}
+	body{
+		font-size:1.4rem;
+	}
+	html,body{
+		width:100%;
+		height:100%;
+	}
+    </style>
+</head>
+<body>
+    <div id="app">
+        <van-nav-bar title="全部优惠卷" left-text="返回" @click-left="aa" left-arrow>
+            <template #right>
+              <van-icon name="search" size="18" />
+            </template>
+          </van-nav-bar>  
+       <!-- 优惠券单元格 -->
+<van-coupon-cell
+:coupons="coupons"
+:chosen-coupon="chosenCoupon"
+@click="showList = true"
+/>
+<!-- 优惠券列表 -->
+<van-popup
+v-model:show="showList"
+round
+position="bottom"
+style="height: 90%; padding-top: 4px;"
+>
+<van-coupon-list
+  :coupons="coupons"
+  :chosen-coupon="chosenCoupon"
+  :disabled-coupons="disabledCoupons"
+  @change="onChange"
+  @exchange="onExchange"
+/>
+</van-popup>
+  
+    </div>
+</body>
+<script>
+    //vue需要绑定一个节点
+    let app={
+        data(){
+            return{
+                
+            }
+        },
+        methods: {
+            aa(){
+                location.href = "user.html";
+            }
+        }
+    }
+    //创建Vue的实例
+    let vue=Vue.createApp(app);
+    //将vantui绑定到vue的实例上面
+    vue.use(vant);
+    //最后，挂载到dom节点上面
+    vue.mount("#app");
+</script>
+</html>
